@@ -301,12 +301,12 @@ void AES::InvCipher(){
 		}
 	}
 
-	// Add the First round key to the state before starting the rounds.
+	// Добавление ключа первого раунда в состояние перед началом раундов
 	AddRoundKey(Nr);
 
-	// There will be Nr rounds.
-	// The first Nr-1 rounds are identical.
-	// These Nr-1 rounds are executed in the loop below.
+	// Будет Nr раундов
+	// Первые Nr-1 раундов идентичны
+	// Эти Nr-1 раунды выполняются в цикле ниже
 	for(round=Nr-1;round>0;round--) {
 		InvShiftRows();
 		InvSubBytes();
@@ -314,14 +314,14 @@ void AES::InvCipher(){
 		InvMixColumns();
 	}
 
-	// The last round is given below.
-	// The MixColumns function is not here in the last round.
+	// Последный раунд приведён ниже
+	// Функция MixColumns нет в последнем раунде
 	InvShiftRows();
 	InvSubBytes();
 	AddRoundKey(0);
 
-	// The decryption process is over.
-	// Copy the state array to output array.
+	// Процесс разшифровки закончен
+	// Копируется массив состояний в выходной массив
 	for(i=0;i<4;i++) {
 		for(j=0;j<4;j++) {
 			out[i*4+j]=state[j][i];
