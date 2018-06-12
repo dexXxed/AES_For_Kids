@@ -350,26 +350,24 @@ using namespace std;
 
 int main() {
 
-    cout << "\t --- Test AES ---" << endl;
+    cout << " --- Тест AES ---" << endl;
 
-   // unsigned char k[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
    unsigned char k[16];
-   printf("Vvedite kluch ");
+   printf("Введите ключ шифрования: ");
    cin >> k;
     unsigned char *output = new unsigned char[16];
     AES *aes;
 
     aes = new AES(k);
 
-    // unsigned char input[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
-unsigned char input[16];
+ unsigned char input[16];
+cout << "Введите сообщение для шифрования ";
   cin >> input;
      cout <<"\nText before encryption:\n";
 	for(int i=0;i<Nk*4;i++)	{
 		printf("%02x ",input[i]);
 	}
-	 cout << "\nASCII " << input << endl; // output in ascii
-	cout <<"\n\n";
+	 cout << "\nASCII - " << input << "\n\n"; // Вывод в ASCII-символах
 
     aes->SetInput(input);
     aes->Cipher();
@@ -379,8 +377,7 @@ unsigned char input[16];
 	for(int i=0;i<Nk*4;i++) {
 		printf("%02x ",output[i]);
 	}
-	 cout << "\nASC " << output << endl; // output in ascii
-	cout <<"\n\n";
+	 cout << "\nASCII - " << output << "\n\n"; // Вывод в ASCII-символах
 
 	for(int i=0;i<Nk*4;i++) {
 		input[i] = output[i];
@@ -389,11 +386,11 @@ unsigned char input[16];
     aes->InvCipher();
     output = aes->GetOutput();
 
-    cout << "\nText after decryption:\n";
+    cout << "\nТекст после расшифровки:\n";
 	for(int i=0;i<Nk*4;i++)	{
 		printf("%02x ",output[i]);
 	}
-	cout << "\nASC " << output << endl; // output in ascii
+	cout << "\nASCII - " << output << endl; // Вывод в ASCII-символах
 	cout <<"\n\n";
 
     return 0;
