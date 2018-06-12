@@ -6,7 +6,7 @@
 #define Nk 4
 #define xtime(x)   ((x<<1) ^ (((x>>7) & 1) * 0x1b))
 #define Multiply(x,y) (((y & 1) * x) ^ ((y>>1 & 1) * xtime(x)) ^ ((y>>2 & 1) * xtime(xtime(x))) ^ ((y>>3 & 1) * xtime(xtime(xtime(x)))) ^ ((y>>4 & 1) * xtime(xtime(xtime(xtime(x))))))
-
+using namespace std;
 class AES {
     private:
         unsigned char in[16], out[16], state[4][4];
@@ -60,7 +60,9 @@ class AES {
                             0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63,
                             0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
                             0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb  };
-
+        /*
+	Далее находятся методы, используемые для шифрования/разшифровки текста пользователя 
+	*/
         void KeyExpansion();
         void AddRoundKey(int round);
         void SubBytes();
@@ -90,7 +92,7 @@ void AES::KeyExpansion() {
 	int i,j;
 	unsigned char temp[4],k;
 
-	// The first round key is the key itself.
+	// Первый раундовый ключ это сам ключ
 	for(i=0;i<Nk;i++) {
 		RoundKey[i*4]=Key[i*4];
 		RoundKey[i*4+1]=Key[i*4+1];
@@ -98,25 +100,25 @@ void AES::KeyExpansion() {
 		RoundKey[i*4+3]=Key[i*4+3];
 	}
 
-	// All other round keys are found from the previous round keys.
+	// Все другие раундовые ключи формируются из предъидущих раундовых ключей
 	while (i < (Nb * (Nr+1))) {
         for(j=0;j<4;j++) {
             temp[j]=RoundKey[(i-1) * 4 + j];
         }
 
         if (i % Nk == 0) {
-            // This function rotates the 4 bytes in a word to the left once.
-			// [a0,a1,a2,a3] becomes [a1,a2,a3,a0]
-			// Function RotWord()
+	    // Эта функция изменяет порядок 4 байт 
+			// [a0,a1,a2,a3] становится [a1,a2,a3,a0]
+			// Функция RotWord()
 			k = temp[0];
 			temp[0] = temp[1];
 			temp[1] = temp[2];
 			temp[2] = temp[3];
 			temp[3] = k;
 
-			// SubWord() is a function that takes a four-byte input word and
-			// applies the S-box to each of the four bytes to produce an output word.
-			// Function Subword()
+			//SubWord () - это функция, которая принимает четырехбайтовое входное слово и
+                        // применяет S-box к каждому из четырех байтов для создания выходного слова
+			// Функция Subword()
 			temp[0]=sbox[temp[0]];
 			temp[1]=sbox[temp[1]];
 			temp[2]=sbox[temp[2]];
@@ -125,7 +127,7 @@ void AES::KeyExpansion() {
 			temp[0] =  temp[0] ^ Rcon[i/Nk];
 		}
 		else if (Nk > 6 && i % Nk == 4) {
-            // Function Subword()
+            // Функция Subword()
             temp[0]=sbox[temp[0]];
 			temp[1]=sbox[temp[1]];
 			temp[2]=sbox[temp[2]];
@@ -169,14 +171,14 @@ void AES::InvSubBytes(){
 void AES::ShiftRows(){
 	unsigned char temp;
 
-	// Rotate first row 1 columns to left
+	// Поворачивание первой строки 1-го столбца влево
 	temp=state[1][0];
 	state[1][0]=state[1][1];
 	state[1][1]=state[1][2];
 	state[1][2]=state[1][3];
 	state[1][3]=temp;
 
-	// Rotate second row 2 columns to left
+	// Поворачивание второй строки 2-го столбца влево
 	temp=state[2][0];
 	state[2][0]=state[2][2];
 	state[2][2]=temp;
@@ -185,7 +187,7 @@ void AES::ShiftRows(){
 	state[2][1]=state[2][3];
 	state[2][3]=temp;
 
-	// Rotate third row 3 columns to left
+	// Поворачивание третьей строки 3-го столбца влево
 	temp=state[3][0];
 	state[3][0]=state[3][3];
 	state[3][3]=state[3][2];
@@ -196,14 +198,14 @@ void AES::ShiftRows(){
 void AES::InvShiftRows(){
 	unsigned char temp;
 
-	// Rotate first row 1 columns to right
+	// Поворачивание первой строки 1-го столбца вправо
 	temp=state[1][3];
 	state[1][3]=state[1][2];
 	state[1][2]=state[1][1];
 	state[1][1]=state[1][0];
 	state[1][0]=temp;
 
-	// Rotate second row 2 columns to right
+	// Поворачивание второй строки 2-го столбца вправо
 	temp=state[2][0];
 	state[2][0]=state[2][2];
 	state[2][2]=temp;
@@ -212,7 +214,7 @@ void AES::InvShiftRows(){
 	state[2][1]=state[2][3];
 	state[2][3]=temp;
 
-	// Rotate third row 3 columns to right
+	// Поворачивание третьей строки 3-го столбца вправо
 	temp=state[3][0];
 	state[3][0]=state[3][1];
 	state[3][1]=state[3][2];
@@ -254,19 +256,19 @@ void AES::InvMixColumns(){
 void AES::Cipher(){
 	int i,j,round=0;
 
-	//Copy the input PlainText to state array.
+	// Копирование введённого PlainText в массив состояний
 	for(i=0;i<4;i++) {
 		for(j=0;j<4;j++) {
 			state[j][i] = in[i*4 + j];
 		}
 	}
 
-	// Add the First round key to the state before starting the rounds.
+	// Добавьление ключа первого раунда в состояние перед началом раундов
 	AddRoundKey(0);
 
-	// There will be Nr rounds.
-	// The first Nr-1 rounds are identical.
-	// These Nr-1 rounds are executed in the loop below.
+	// Тут будет Nr раундов.
+	// Первые Nr-1 раундов идентичные
+	// Эти Nr-1 раунды выполняются в цикле ниже
 	for(round=1;round<Nr;round++) {
 		SubBytes();
 		ShiftRows();
@@ -274,14 +276,14 @@ void AES::Cipher(){
 		AddRoundKey(round);
 	}
 
-	// The last round is given below.
-	// The MixColumns function is not here in the last round.
+	// Последный раунд приведён ниже
+	// Функция MixColumns нет в последнем раунде
 	SubBytes();
 	ShiftRows();
 	AddRoundKey(Nr);
 
-	// The encryption process is over.
-	// Copy the state array to output array.
+	// Процесс шифрования завершён
+	// Копируется массив состояний в выходной массив
 	for(i=0;i<4;i++) {
 		for(j=0;j<4;j++) {
 			out[i*4+j]=state[j][i];
@@ -292,7 +294,7 @@ void AES::Cipher(){
 void AES::InvCipher(){
     int i,j,round=0;
 
-	//Copy the input CipherText to state array.
+	//Копируем входной CipherText в массив состояний 
 	for(i=0;i<4;i++) {
 		for(j=0;j<4;j++) {
 			state[j][i] = in[i*4 + j];
@@ -345,12 +347,9 @@ void AES::ChangeKey(unsigned char* newKey) {
 	}
 	KeyExpansion();
 };
-
-using namespace std;
-
 int main() {
 
-    cout << " --- Тест AES ---" << endl;
+    cout << " --- Тест AES --- \n";
 
    unsigned char k[16];
    printf("Введите ключ шифрования: ");
@@ -363,7 +362,7 @@ int main() {
  unsigned char input[16];
 cout << "Введите сообщение для шифрования ";
   cin >> input;
-     cout <<"\nText before encryption:\n";
+     cout <<"\nТекст до шифрования:\n";
 	for(int i=0;i<Nk*4;i++)	{
 		printf("%02x ",input[i]);
 	}
@@ -373,7 +372,7 @@ cout << "Введите сообщение для шифрования ";
     aes->Cipher();
     output = aes->GetOutput();
 
-    cout << "\nText after encryption:\n";
+    cout << "\nТекст после шифрования:\n";
 	for(int i=0;i<Nk*4;i++) {
 		printf("%02x ",output[i]);
 	}
@@ -390,8 +389,6 @@ cout << "Введите сообщение для шифрования ";
 	for(int i=0;i<Nk*4;i++)	{
 		printf("%02x ",output[i]);
 	}
-	cout << "\nASCII - " << output << endl; // Вывод в ASCII-символах
-	cout <<"\n\n";
-
+	cout << "\nASCII - " << output << "\n\n"; // Вывод в ASCII-символах
     return 0;
 }
