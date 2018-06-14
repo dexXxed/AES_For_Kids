@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <locale.h>
 #define Nb 4
 #define Nr 10
 #define Nk 4
@@ -348,7 +349,7 @@ void AES::ChangeKey(unsigned char* newKey) {
 	KeyExpansion();
 };
 int main() {
-
+    setlocale(LC_ALL,"RUS");
     cout << " --- Тест AES --- \n";
 
    unsigned char k[16];
