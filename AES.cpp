@@ -129,7 +129,7 @@ void AES::KeyExpansion() {
 		}
 		else if (Nk > 6 && i % Nk == 4) {
             // Функция Subword()
-            temp[0]=sbox[temp[0]];
+                        temp[0]=sbox[temp[0]];
 			temp[1]=sbox[temp[1]];
 			temp[2]=sbox[temp[2]];
 			temp[3]=sbox[temp[3]];
@@ -144,8 +144,10 @@ void AES::KeyExpansion() {
 
 void AES::AddRoundKey(int round){
     int i,j;
-	for(i=0;i<4;i++) {
-		for(j=0;j<4;j++) {
+	for(i=0;i<4;i++) 
+	{
+		for(j=0;j<4;j++) 
+		{
 			state[j][i] ^= RoundKey[round * Nb * 4 + i * Nb + j];
 		}
 	}
@@ -153,8 +155,10 @@ void AES::AddRoundKey(int round){
 
 void AES::SubBytes(){
     int i,j;
-	for(i=0;i<4;i++) {
-		for(j=0;j<4;j++) {
+	for(i=0;i<4;i++)
+	{
+		for(j=0;j<4;j++)
+		{
 			state[i][j] = sbox[(state[i][j])];
 		}
 	}
@@ -162,8 +166,10 @@ void AES::SubBytes(){
 
 void AES::InvSubBytes(){
     int i,j;
-	for(i=0;i<4;i++) {
-		for(j=0;j<4;j++) {
+	for(i=0;i<4;i++)
+	{
+		for(j=0;j<4;j++) 
+		{
 			state[i][j] = rsbox[(state[i][j])];
 		}
 	}
@@ -246,7 +252,6 @@ void AES::InvMixColumns(){
 		c = state[2][i];
 		d = state[3][i];
 
-
 		state[0][i] = Multiply(a, 0x0e) ^ Multiply(b, 0x0b) ^ Multiply(c, 0x0d) ^ Multiply(d, 0x09);
 		state[1][i] = Multiply(a, 0x09) ^ Multiply(b, 0x0e) ^ Multiply(c, 0x0b) ^ Multiply(d, 0x0d);
 		state[2][i] = Multiply(a, 0x0d) ^ Multiply(b, 0x09) ^ Multiply(c, 0x0e) ^ Multiply(d, 0x0b);
@@ -258,8 +263,10 @@ void AES::Cipher(){
 	int i,j,round=0;
 
 	// Копирование введённого PlainText в массив состояний
-	for(i=0;i<4;i++) {
-		for(j=0;j<4;j++) {
+	for(i=0;i<4;i++) 
+	{
+		for(j=0;j<4;j++)
+		{
 			state[j][i] = in[i*4 + j];
 		}
 	}
@@ -285,8 +292,10 @@ void AES::Cipher(){
 
 	// Процесс шифрования завершён
 	// Копируется массив состояний в выходной массив
-	for(i=0;i<4;i++) {
-		for(j=0;j<4;j++) {
+	for(i=0;i<4;i++)
+	{
+		for(j=0;j<4;j++)
+		{
 			out[i*4+j]=state[j][i];
 		}
 	}
@@ -296,8 +305,10 @@ void AES::InvCipher(){
     int i,j,round=0;
 
 	//Копируем входной CipherText в массив состояний 
-	for(i=0;i<4;i++) {
-		for(j=0;j<4;j++) {
+	for(i=0;i<4;i++) 
+	{
+		for(j=0;j<4;j++)
+		{
 			state[j][i] = in[i*4 + j];
 		}
 	}
@@ -323,8 +334,10 @@ void AES::InvCipher(){
 
 	// Процесс разшифровки закончен
 	// Копируется массив состояний в выходной массив
-	for(i=0;i<4;i++) {
-		for(j=0;j<4;j++) {
+	for(i=0;i<4;i++) 
+	{
+		for(j=0;j<4;j++)
+		{
 			out[i*4+j]=state[j][i];
 		}
 	}
@@ -364,7 +377,8 @@ int main() {
 cout << "Введите сообщение для шифрования ";
   cin >> input;
      cout <<"\nТекст до шифрования:\n";
-	for(int i=0;i<Nk*4;i++)	{
+	for(int i=0;i<Nk*4;i++)	
+	{
 		printf("%02x ",input[i]);
 	}
 	 cout << "\nASCII - " << input << "\n\n"; // Вывод в ASCII-символах
@@ -374,20 +388,24 @@ cout << "Введите сообщение для шифрования ";
     output = aes->GetOutput();
 
     cout << "\nТекст после шифрования:\n";
-	for(int i=0;i<Nk*4;i++) {
+	for(int i=0;i<Nk*4;i++)
+	{
 		printf("%02x ",output[i]);
 	}
 	 cout << "\nASCII - " << output << "\n\n"; // Вывод в ASCII-символах
 
-	for(int i=0;i<Nk*4;i++) {
+	for(int i=0;i<Nk*4;i++) 
+	{
 		input[i] = output[i];
 	}
-	aes->SetInput(input);
+	
+    aes->SetInput(input);
     aes->InvCipher();
     output = aes->GetOutput();
 
     cout << "\nТекст после расшифровки:\n";
-	for(int i=0;i<Nk*4;i++)	{
+	for(int i=0;i<Nk*4;i++)
+	{
 		printf("%02x ",output[i]);
 	}
 	cout << "\nASCII - " << output << "\n\n"; // Вывод в ASCII-символах
