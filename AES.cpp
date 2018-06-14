@@ -366,22 +366,31 @@ int main() {
     cout << " --- Тест AES --- \n";
 
    unsigned char k[16];
+    char buffk[1000];
    printf("Введите ключ шифрования: ");
-   cin >> k;
+   cin >> buffk;
+   for(int i=0;i<16;++i) k[i]=buffk[i]; // для соблюдения корректности длинны ключа
+   for(int i=0;i<1000;++i) buffk[i] =0; // заполнение его 0
     unsigned char *output = new unsigned char[16];
     AES *aes;
-
     aes = new AES(k);
 
  unsigned char input[16];
+  char buff2[10000];
 cout << "Введите сообщение для шифрования ";
-  cin >> input;
+  cin >> buff2;
+  for(int i=0;i<16;++i) input[i]=buff2[i]; // для соблюдения корректности длинны ключа
+   for(int i=0;i<10000;++i) buffk[i] =0; // заполнение его 0
      cout <<"\nТекст до шифрования:\n";
 	for(int i=0;i<Nk*4;i++)	
 	{
 		printf("%02x ",input[i]);
 	}
-	 cout << "\nASCII - " << input << "\n\n"; // Вывод в ASCII-символах
+	 cout << "\nASCII - ";
+	 for(int i=0;i<Nk*4;++i){
+	     printf("%c",input[i]); // Вывод в ASCII-символах
+	 }
+	 
 
     aes->SetInput(input);
     aes->Cipher();
@@ -392,8 +401,10 @@ cout << "Введите сообщение для шифрования ";
 	{
 		printf("%02x ",output[i]);
 	}
-	 cout << "\nASCII - " << output << "\n\n"; // Вывод в ASCII-символах
-
+	 cout << "\nASCII - ";
+	 for(int i=0;i<Nk*4;++i){
+	     printf("%c",output[i]); // Вывод в ASCII-символах
+	 }
 	for(int i=0;i<Nk*4;i++) 
 	{
 		input[i] = output[i];
@@ -408,6 +419,9 @@ cout << "Введите сообщение для шифрования ";
 	{
 		printf("%02x ",output[i]);
 	}
-	cout << "\nASCII - " << output << "\n\n"; // Вывод в ASCII-символах
+	 cout << "\nASCII - ";
+	 for(int i=0;i<Nk*4;++i){
+	     printf("%c",output[i]); // Вывод в ASCII-символах
+	 }
     return 0;
 }
