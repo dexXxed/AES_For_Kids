@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <locale.h>
+// #include <Windows.h>
 #define Nb 4
 #define Nr 10
 #define Nk 4
@@ -363,6 +364,8 @@ void AES::ChangeKey(unsigned char* newKey) {
 };
 int main() {
     setlocale(LC_ALL,"RUS");
+   // SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
+    //SetConsoleOutputCP(1251); // установка кодовой страницы win-cp 1251 в поток вывода
     cout << " --- Тест AES --- \n";
 
    unsigned char k[16];
