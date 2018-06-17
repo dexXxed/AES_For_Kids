@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <locale.h>
-// #include <Windows.h>
+#include <Windows.h>
 #define Nb 4
 #define Nr 10
 #define Nk 4
@@ -80,7 +80,6 @@ class AES {
         void InvCipher();
         void SetInput(unsigned char* input);
         unsigned char *GetOutput();
-        void ChangeKey(unsigned char* newKey);
 };
 AES::AES(unsigned char* k) {
     for(int i=0;i<Nk*4;i++)
@@ -355,13 +354,6 @@ unsigned char *AES::GetOutput() {
     return out;
 };
 
-void AES::ChangeKey(unsigned char* newKey) {
-    for(int i=0;i<Nk*4;i++)
-	{
-		Key[i]=newKey[i];
-	}
-	KeyExpansion();
-};
 int main() {
     setlocale(LC_ALL,"RUS");
    // SetConsoleCP(1251);// установка кодовой страницы win-cp 1251 в поток ввода
